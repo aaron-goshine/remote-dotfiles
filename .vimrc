@@ -3,11 +3,8 @@
 " ---------------
 set background=dark
 colorscheme jellybeans
-" Force 256 color mode if available
-hi! link cssAttr Constant
-if $TERM =~ "-256color"
-   set t_Co=256
-endif
+
+
 
 " UI
 " ---------------
@@ -19,9 +16,11 @@ set cmdheight=2    " Make the command area two lines high
 set encoding=utf-8
 set noshowmode     " Don't show the mode since Powerline shows it
 set title          " Set the title of the window in the terminal to the file
+
 if exists('+colorcolumn')
   set colorcolumn=80 " Color the 80th column differently as a wrapping guide.
 endif
+
 " Disable tooltips for hovering keywords in Vim
 if exists('+ballooneval')
   " This doesn't seem to stop tooltips for Ruby files
@@ -29,6 +28,7 @@ if exists('+ballooneval')
   " 100 second delay seems to be the only way to disable the tooltips
   set balloondelay=100000
 endif
+
 
 " ---------------
 " Behaviors #211212
@@ -53,6 +53,7 @@ set timeout
 set timeoutlen=750
 set ttimeoutlen=250
 set spell spelllang=en_gb
+
 " ---------------
 " Text Format
 " ---------------
@@ -85,22 +86,10 @@ set wildignore+=*.o,*.obj,*.exe,*.so,*.dll,*.pyc,.svn,.hg,.bzr,.git,
 " ---------------
 set showmatch   " Show matching brackets.
 set matchtime=2 " How many tenths of a second to blink
-" Show invisible characters
 set list
-
-" Show trailing spaces as dots and carrots for extended lines.
-" From Janus, http://git.io/PLbAlw
-
-set listchars=""
-" make tabs visible
 set listchars=tab:\|\ ,eol:¬
-" show trailing spaces as dots
 set listchars+=trail:•
-" The character to show in the last column when wrap is off and the line
-" continues beyond the right of the screen
 set listchars+=extends:>
-" The character to show in the last column when wrap is off and the line
-" continues beyond the right of the screen
 set listchars+=precedes:<
 
 set nocompatible " be iMproved
@@ -219,5 +208,62 @@ vnoremap <silent> < <gv
 vnoremap <silent> > >gv
 nnoremap <silent> n nzzzv
 nnoremap <silent> N Nzzzv
+
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_enable_underbar_completion = 0
+let g:neocomplcache_dictionary_filetype_lists = {
+			\ 'default' : '/usr/share/dict/words',
+			\ 'vimshell' : $HOME.'/.vimshell_hist',
+			\ 'scheme' : $HOME.'/.gosh_completions'
+			\ }
+
+
+inoremap <Tab> <C-R>=Tab_Or_Complete()<CR>
+
+"---------------------------
+" insert a tab char if
+" not in process of typing
+" a word
+" --------------------------
+function! Tab_Or_Complete()
+  if col('.')>1 && strpart( getline('.'), col('.')-2, 3 ) =~ '^\w'
+    return "\<C-N>"
+  else
+    return "\<Tab>"
+  endif
+endfunction
+
+"---------------------------
+" set Dictionary types
+" base on the current file type
+"---------------------------
+function! SetDictionary()
+  if filereadable($HOME."/.vim/syntax/".&filetype.".vim")
+    execute ('setl dict='.$HOME."/.vim/syntax/".&filetype.".vim")
+  elseif filereadable($VIMRUNTIME."/syntax/".&filetype.".vim")
+
+    execute ('setl dict='.$VIMRUNTIME."/syntax/".&filetype.".vim")
+  endif
+  set complete+=k
+endfunction
+
+"---------------------------
+" load template for file
+" extension 
+"---------------------------
+
+function! LoadTemplate()
+  silent! 0r ~/.vim/template/tmpl.%:e
+endfunction
+
+
+autocmd! BufNewFile * call LoadTemplate()
+au FocusLost * :silent! wall
+au VimResized * :wincmd =
+
+set dictionary-=/usr/share/dict/words dictionary+=/usr/share/dict/words
+set complete+=k
+autocmd! FileType * call SetDictionary()
 
 
