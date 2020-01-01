@@ -161,7 +161,6 @@ function md() {
   mkdir -p "$@" && cd "$@"
 }
 
-
 # find shorthand
 function f() {
   find . -name "$1" 2>&1 | grep -v 'Permission denied'
