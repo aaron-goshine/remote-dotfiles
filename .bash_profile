@@ -10,7 +10,7 @@ echo ' ------------------------------------------------'
 echo ' always remember to RTFMP.            '
 echo ' ------------------------------------------------'
 
-source '~/.bash/git-completion.sh'
+source ~/.bash/git-completion.sh
 
 PS1='> [\W\[\e[1;32m\]$(__git_ps1 "(%s)")\[\e[0m\]]\[\e[1;32m\] --➤ \[\e[0m\]'
 
