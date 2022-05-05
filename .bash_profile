@@ -147,10 +147,10 @@ export IRC_CLIENT='irssi'
 # Set this to the command you use for todo.txt-cli
 export TODO="task"
 
-  export NVM_DIR="~/.nvm"
-  . "/usr/local/opt/nvm/nvm.sh"
-
-
+  # export NVM_DIR="~/.nvm"
+  # . "/usr/local/opt/nvm/nvm.sh"
+  #
+  #
 export WORKON_HOME="$HOME/.virtualenvs"
 export VIRTENV="$HOME/.virtualenvs"
 export PYTHONSTARTUP="$HOME/.pystartup"
